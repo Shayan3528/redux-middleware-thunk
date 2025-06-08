@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+// const fetch = require("node-fetch");
 
 const fetchTodos= async(dispatch,getState)=>{
       const response = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=5");
