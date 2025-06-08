@@ -1,8 +1,8 @@
 
-const fetch  = require("node-fetch");
 
 
-const delayActionMiddleware = (store)=>(next)=>(action)=>{
+
+const delayActionMiddleware = (store)=>(next)=>async(action)=>{
     if(action.type === "todos/added"){
         console.log("I am delaying your action");
         setTimeout(()=>{
@@ -15,17 +15,10 @@ const delayActionMiddleware = (store)=>(next)=>(action)=>{
     return next(action);
 }
 
-const fetchTodosMiddleware = (store)=>(next)=>async(action)=>{
-    if(action.type === "todos/fetchTodos"){
-        const response = await fetch("https://jsonplaceholder.typicode.com/todos?_limit=5");
-        const todos = await response.json();
-        store.dispatch({
-            type:"todos/loaded",
-            payload:todos,
-        });
-        console.log(`Number of updated todos: ${store.getState().todos.length}`);
-
-        return;
+const fetchASyncTodosMiddleware = (store)=>(next)=>(action)=>{
+    if(typeof action === "function"){
+       return action(store.dispatch,store.getState);
+        
     }
     return next(action);
 
@@ -33,5 +26,5 @@ const fetchTodosMiddleware = (store)=>(next)=>async(action)=>{
 
 module.exports = {
     delayActionMiddleware,
-    fetchTodosMiddleware
+    fetchASyncTodosMiddleware
 }

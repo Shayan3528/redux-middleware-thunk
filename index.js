@@ -1,5 +1,7 @@
 const { createStore, applyMiddleware } = require("redux");
-const { delayActionMiddleware,fetchTodosMiddleware } = require("./middleware");
+const { delayActionMiddleware,fetchASyncTodosMiddleware } = require("./middleware");
+const {fetchTodos} = require("./functions");
+
 
 const initialState = {
   todos: [],
@@ -23,13 +25,10 @@ const todoReducer = (state = initialState, action) => {
   }
 };
 
-const store = createStore(todoReducer, applyMiddleware(delayActionMiddleware,fetchTodosMiddleware));
+const store = createStore(todoReducer, applyMiddleware(delayActionMiddleware,fetchASyncTodosMiddleware));
 
 store.subscribe(() => {
   console.log(store.getState());
 });
 
-store.dispatch({
-  type: "todos/fetchTodos",
- 
-});
+store.dispatch(fetchTodos);
